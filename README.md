@@ -1,69 +1,59 @@
-# React + TypeScript + Vite
+# Конструктор форм
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Создание конструктора формы с возможностью добавления, редактирования и удаления полей разных типов (строка, число, список) с валидацией.
 
-Currently, two official plugins are available:
+Форма работает локально. Запустите проект, чтобы протестировать функционал.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠 Как запустить
 
-## Expanding the ESLint configuration
+1. Установите зависимости:
+   ```bash
+   npm install
+2. Запустите локальный сервер:
+   npm run dev
+3. Откройте в браузере:
+http://localhost:5173
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+ Архитектура проекта
+Проект построен на React + TypeScript с использованием функциональных компонентов и хуков. Архитектура ориентирована на расширяемость и чистоту кода.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Основные компоненты:
+App — главный компонент, содержит заголовок и подключает FormConstructor.
+FormConstructor — управляет списком полей, отвечает за добавление, редактирование и удаление.
+FieldEditor — модальное окно для настройки параметров поля (название, тип, обязательность и т.д.).
+Field — отображает одно поле в списке с кнопками редактирования и удаления.
+Preview — динамический предпросмотр формы с валидацией.
+InputModule — универсальный компонент ввода, поддерживает разные типы (string, number, list).
+Валидация
+Реализована с помощью:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+yup — для описания схемы валидации
+react-hook-form + yupResolver — для подключения валидации к форме
+Валидация срабатывает при вводе и при отправке
+Управление состоянием
+Состояние формы (поля) хранится в FormConstructor через useState.
+При редактировании — открывается модальное окно (FieldEditor), где можно изменить параметры.
+Новые поля добавляются через тот же редактор, но в режиме создания.
+Расширяемость
+Легко добавлять новые типы полей (например, checkbox, date).
+Все типы описаны в types.ts — централизованное управление.
+Поддержка списков реализована через нативный <select>, что позволяет избежать проблем с совместимостью (например, с React 19).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+src/
+├── components/
+│   ├── FormConstructor.tsx     # Основной компонент управления формой
+│   ├── Field.tsx               # Отображение одного поля
+│   ├── FieldEditor.tsx         # Модальное окно редактирования
+│   ├── Preview.tsx             # Предпросмотр формы
+│   └── InputModule.tsx         # Компонент ввода с поддержкой разных типов
+├── types.ts                    # Общие типы (FieldProps)
+├── App.tsx                     # Главный компонент
+└── main.tsx                    # Точка входа
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Используемые технологии
+React + TypeScript
+Vite (сборка)
+React Hook Form + Yup (валидация)
+Blueprint.js (UI-компоненты)
